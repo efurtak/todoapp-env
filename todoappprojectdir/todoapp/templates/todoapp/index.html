@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>TODOs Index</h2>
+
+<br>
+
+<form action="/todo/" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add_todo">
+    <!-- <input type="text" id="name-input" name="name" placeholder="TODO name"> -->
+     <div class="mb-4">
+        <label class="block">{{ form.name.label }}</label>
+        {{ form.name }}
+        <button type="submit" class="button">Add</button>
+    </div>
+</form>
+
+<br>
+
+{% if todos %}
+    <ul>
+        {% for todo in todos %}
+            <li class="li-todo">{{ todo.name }}
+                <span id="todo-controls">
+                    <form action="/todo/" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="toggle_finished">
+                        <input type="hidden" name="id" value="{{ todo.id }}">
+                        <button type="submit" class="button">{{ todo.is_finished }}</button>
+                    </form>
+                    <form action="/todo/" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_todo">
+                        <input type="hidden" name="id" value="{{ todo.id }}">
+                        <button type="submit" class="button-delete">Delete</button>
+                    </form>
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    No TODOs found.
+{% endif %}
+
+{% endblock %}
